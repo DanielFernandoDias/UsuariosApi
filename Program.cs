@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using UsuariosApi.Data;
 using UsuariosApi.Model;
+using UsuariosApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,9 @@ builder.Services
 
 // Configurando o AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Injeção de depedencia ao nosso serviço
+builder.Services.AddScoped<UsuarioService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UsuariosApi.Data.Dtos;
 using UsuariosApi.Model;
+using UsuariosApi.Services;
 
 namespace UsuariosApi.Controllers
 {
@@ -10,24 +11,24 @@ namespace UsuariosApi.Controllers
     [Route("[Controller]")]
     public class UsuarioController : Controller
     {
-        private readonly IMapper _mapper;
-        private UserManager<Usuario> _userManager;
-        public UsuarioController(IMapper mapper, UserManager<Usuario> userManager)
+        private UsuarioService _usuarioService;
+        public UsuarioController(UsuarioService usuarioService)
         {
-            _mapper = mapper;
-            _userManager = userManager;
+            _usuarioService = usuarioService;
         }
 
-        [HttpPost]
+        [HttpPost("Cadastro")]
         public async Task<IActionResult> CadastraUsuario(CreateUsuarioDto usuarioDto) 
         {
-            Usuario user = _mapper.Map<Usuario>(usuarioDto);
+            await _usuarioService.Cadastro(usuarioDto);
+            return Ok("Usuário Cadastrado!");
+        }
 
-            IdentityResult result = await _userManager.CreateAsync(user, usuarioDto.Password);
-
-            if(result.Succeeded) return Ok("Usuário Cadastrado!");
-
-            throw new ApplicationException("Falha ao cadastrar usuario");
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(LoginUsuarioDto loginDto)
+        {
+           await _usuarioService.Login(loginDto);
+           return Ok("Usuario autenticado");
         }
 
 
